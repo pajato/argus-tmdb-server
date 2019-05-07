@@ -13,7 +13,7 @@ val slf4jVersion = "1.7.26"
 val argusCoreVersion = "0.0.8"
 
 group = "com.pajato"
-version = "0.0.1"
+version = "0.0.2"
 
 repositories {
     jcenter()
@@ -30,6 +30,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("com.soywiz:klock:$klockVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
+                implementation("com.pajato:argus-tmdb-core:$argusCoreVersion")
             }
         }
         commonTest {
@@ -46,6 +47,7 @@ kotlin {
                 implementation("io.javalin:javalin:$javalinVersion")
                 implementation("org.slf4j:slf4j-simple:$slf4jVersion")
                 implementation("com.pajato:argus-tmdb-core-jvm:$argusCoreVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
             }
         }
 
@@ -53,17 +55,18 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test")
                 implementation("org.jetbrains.kotlin:kotlin-test-junit")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }
         }
     }
 }
 
-tasks.register<Copy>("copyMainResources") {
-    from(file("$projectDir/src/jvmMain/resources/"))
-    into(file("$buildDir/classes/kotlin/jvm/main/"))
+tasks.register<Copy>("copyTestResources") {
+    from(file("$projectDir/src/jvmTest/resources/"))
+    into(file("$buildDir/classes/kotlin/jvm/test/"))
 }
 
-tasks.get(name = "jvmMainClasses").dependsOn += tasks.get(name = "copyMainResources")
+tasks.get(name = "jvmTest").dependsOn += tasks.get(name = "copyTestResources")
 
 jacoco {
     toolVersion = "0.8.3"

@@ -10,7 +10,7 @@ val coroutinesVersion = "1.1.1"
 val klockVersion = "1.1.1"
 val javalinVersion = "2.8.0"
 val slf4jVersion = "1.7.26"
-val argusCoreVersion = "0.0.8"
+val argusCoreVersion = "0.0.11"
 
 group = "com.pajato"
 version = "0.0.2"
@@ -30,7 +30,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("com.soywiz:klock:$klockVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
-                implementation("com.pajato:argus-tmdb-core:$argusCoreVersion")
+                implementation("com.pajato.argus:argus-tmdb-core:$argusCoreVersion")
             }
         }
         commonTest {
@@ -46,7 +46,7 @@ kotlin {
                 implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
                 implementation("io.javalin:javalin:$javalinVersion")
                 implementation("org.slf4j:slf4j-simple:$slf4jVersion")
-                implementation("com.pajato:argus-tmdb-core-jvm:$argusCoreVersion")
+                implementation("com.pajato.argus:argus-tmdb-core-jvm:$argusCoreVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
             }
         }

@@ -21,6 +21,8 @@ private const val ARG_START = "start"
 private const val ARG_SIZE = "size"
 internal const val PORT = 7234
 
+fun main() { Server() }
+
 internal actual class Server(private val port: Int = PORT, private val context: FetchContext = ContextImpl()) {
     internal var state: JavalinEvent = SERVER_START_FAILED
     internal val resourceDir by lazy { "${File(this::class.java.classLoader.getResource("").path).parent}/main" }

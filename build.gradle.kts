@@ -1,93 +1,53 @@
+val ktorVersion: String by project
+val kotlinVersion: String by project
+val logbackVersion: String by project
+val coroutinesVersion = "1.1.1"
+val klockVersion = "1.1.1"
+val argusCoreVersion = "0.0.11"
+
 plugins {
-    kotlin("multiplatform") version "1.3.31"
-    `maven-publish`
+    application
+    kotlin("jvm") version "1.3.40"
     jacoco
 }
 
-// Note to any reviewer: what's the "right" way to do this, handle version settings?
-val kotlinVersion = "1.3.31"
-val coroutinesVersion = "1.1.1"
-val klockVersion = "1.1.1"
-val javalinVersion = "2.8.0"
-val slf4jVersion = "1.7.26"
-val argusCoreVersion = "0.0.11"
+group = "com.pajato.argus"
+version = "0.1.0"
 
-group = "com.pajato"
-version = "0.0.2"
+application {
+    mainClassName = "io.ktor.server.netty.EngineMain"
+}
 
 repositories {
     jcenter()
-    mavenCentral()
-    maven( "https://dl.bintray.com/soywiz/soywiz")
-    mavenLocal()
+    maven { url = uri("https://dl.bintray.com/soywiz/soywiz") }
+    maven { url = uri("https://kotlin.bintray.com/ktor") }
 }
 
-kotlin {
+dependencies {
+    compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
+    compile("io.ktor:ktor-server-netty:$ktorVersion")
+    compile("ch.qos.logback:logback-classic:$logbackVersion")
+    compile("io.ktor:ktor-server-core:$ktorVersion")
+    compile("io.ktor:ktor-html-builder:$ktorVersion")
+    compile("io.ktor:ktor-server-host-common:$ktorVersion")
+    compile("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
+    compile("com.soywiz:klock-jvm:$klockVersion")
+    compile("com.pajato.argus:argus-tmdb-core-jvm:$argusCoreVersion")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation(kotlin("stdlib-common"))
-                implementation("com.soywiz:klock:$klockVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$coroutinesVersion")
-                implementation("com.pajato.argus:argus-tmdb-core:$argusCoreVersion")
-            }
-        }
-        commonTest {
-            dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-test-common")
-                implementation("org.jetbrains.kotlin:kotlin-test-annotations-common")
-            }
-        }
-
-        jvm("jvm").compilations["main"].defaultSourceSet {
-            dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-                implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-                implementation("io.javalin:javalin:$javalinVersion")
-                implementation("org.slf4j:slf4j-simple:$slf4jVersion")
-                implementation("com.pajato.argus:argus-tmdb-core-jvm:$argusCoreVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-            }
-        }
-
-        jvm("jvm").compilations["test"].defaultSourceSet {
-            dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-test")
-                implementation("org.jetbrains.kotlin:kotlin-test-junit")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-            }
-        }
-    }
+    testCompile("io.ktor:ktor-server-tests:$ktorVersion")
+    testCompile("org.jetbrains.kotlin:kotlin-test")
+    testCompile("org.jetbrains.kotlin:kotlin-test-junit")
+    testCompile("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 }
 
-tasks.register<Copy>("copyTestResources") {
-    from(file("$projectDir/src/jvmTest/resources/"))
-    into(file("$buildDir/classes/kotlin/jvm/test/"))
-}
+kotlin.sourceSets["main"].kotlin.srcDirs("src")
+kotlin.sourceSets["test"].kotlin.srcDirs("test")
 
-tasks.get(name = "jvmTest").dependsOn += tasks.get(name = "copyTestResources")
+sourceSets["main"].resources.srcDirs("resources")
+sourceSets["test"].resources.srcDirs("testresources")
 
 jacoco {
-    toolVersion = "0.8.3"
-}
-
-tasks {
-    val coverage = register<JacocoReport>("jacocoJVMTestReport") {
-        group = "Reporting"
-        description = "Generate Jacoco coverage report."
-        classDirectories.setFrom(fileTree("$buildDir/classes/kotlin/jvm/main"))
-        val coverageSourceDirs = listOf("src/commonMain/kotlin", "src/jvmMain/kotlin")
-        additionalSourceDirs.setFrom(files(coverageSourceDirs))
-        sourceDirectories.setFrom(files(coverageSourceDirs))
-        executionData.setFrom(files("$buildDir/jacoco/jvmTest.exec"))
-        reports {
-            html.isEnabled = true
-            xml.isEnabled = true
-            csv.isEnabled = false
-        }
-    }
-    named("jvmTest") {
-        finalizedBy(coverage)
-    }
+    toolVersion = "0.8.4"
 }

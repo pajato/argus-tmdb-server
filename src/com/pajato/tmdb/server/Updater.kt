@@ -7,7 +7,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 
-internal fun processCacheUpdate(context: FetchContext, cache: MutableMap<String, List<String>>, resourceDir: File) {
+internal fun processCacheUpdate(
+    cache: MutableMap<String, List<String>>,
+    context: FetchContext = ContextImpl(),
+    resourceDir: File) {
     GlobalScope.launch(Dispatchers.Default) {
         fun clearState() {
             // Clear out any stale dataset files.

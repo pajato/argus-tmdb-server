@@ -1,15 +1,18 @@
 # Gradle
 .gradle/
 build/
+out/
 
 # Intellij (CE) files
 .idea/
 *.iml
+*.ipr
+*.iws
 
-# Compiled class file
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
 
 # BlueJ files
@@ -34,3 +37,4 @@ hs_err_pid*
 src/commonMain/resources/secureProps.txt
 
 local.properties
+

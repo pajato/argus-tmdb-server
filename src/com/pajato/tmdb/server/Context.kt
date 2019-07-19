@@ -19,7 +19,7 @@ abstract class FetchContext {
     abstract var startTime: Long
     abstract var exportDate: String
 
-    private var counter = 0
+    internal var counter = 0
 
     internal fun updateAction(): Boolean {
         startTime += updateIntervalMillis
